@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 public class Text {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -7,29 +8,43 @@ public class Text {
         System.out.println(textModifier(inputText));
     }
 
-    public static String textModifier(String text) {
+    public static String textModifier(String inputText) {
+        inputText = removeExtraSpaces(inputText);
+
+        StringBuilder modifiedText = new StringBuilder();
+        int sum = calculateSumAndModifyText(inputText, modifiedText);
+
+        String resultString = modifiedText.toString().trim();
+        if (sum > 0) {
+            resultString += " " + sum;
+        }
+        return resultString;
+    }
+
+    private static String removeExtraSpaces(String text) {
         StringBuilder sb = new StringBuilder();
         boolean space = false;
-
         for (char c : text.toCharArray()) {
             if (c != ' ' || !space) {
                 sb.append(c);
             }
             space = (c == ' ');
         }
-        text = sb.toString();
+        return sb.toString();
+    }
 
-
-        sb = new StringBuilder();
+    private static int calculateSumAndModifyText(String text, StringBuilder sb) {
         int sum = 0;
-
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
+
             if (c == '-') {
                 if (i > 0 && i < text.length() - 1) {
                     char left = text.charAt(i - 1);
                     char right = text.charAt(i + 1);
-                    sb.setCharAt(sb.length() - 1, right);
+
+                    sb.deleteCharAt(sb.length() - 1);
+                    sb.append(right);
                     sb.append(left);
                     i++;
                 }
@@ -41,12 +56,6 @@ public class Text {
                 sb.append(c);
             }
         }
-
-        String finalTxt = sb.toString().trim();
-
-            if (sum > 0) {
-                finalTxt += " " + sum;
-            }
-            return finalTxt;
-        }
+        return sum;
     }
+}
